@@ -63,7 +63,7 @@ function App() {
       },
     },
   });
-  const transitionDuration = 800;
+  const transitionDuration = 800; 
 
   const theme = darkMode ? darkTheme : lightTheme;
   console.log(theme);
