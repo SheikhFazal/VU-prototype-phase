@@ -1,0 +1,10 @@
+.nav-links-box {
+
+}
+.divider-for-nav-links {
+  width: 0%;
+  transition-duration: 0.5s;
+}
+.nav-links-box:hover .divider-for-nav-links {
+  width: 100%;
+}
