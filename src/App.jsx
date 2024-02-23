@@ -1,173 +1,115 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+// import Home from "./features/home";
+// import AboutMe from "./features/about-me";
+// import Skills from "./features/skills";
+import LinearProgress from "@mui/material/LinearProgress";
+
 import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Link,
-  NavLink,
-} from "react-router-dom";
-import Home from "./components/home";
-import AboutMe from "./components/about-me";
-import Skills from "./components/skills";
-import {
-  AppBar,
   Box,
-  Button,
   CssBaseline,
-  Divider,
-  Drawer,
   IconButton,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
   ThemeProvider,
   Toolbar,
-  Typography,
   createTheme,
-  useTheme,
 } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import { useState } from "react";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import { Suspense, lazy, useState } from "react";
 import "./app.css";
+import NavBar from "./components/nav";
+import CustomDrawer from "./components/drawer";
+const Home = lazy(() => delayForDemo(import("./features/home")));
+const AboutMe = lazy(() => delayForDemo(import("./features/about-me")));
+const Skills = lazy(() => delayForDemo(import("./features/skills")));
 
-function App(props) {
+function delayForDemo(promise) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, 1500);
+  }).then(() => promise);
+}
+function App() {
+  const [darkMode, setDarkMode] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   // const darkTheme = createTheme({
   //   palette: {
   //     mode: "dark",
   //     primary: {
   //       main: "#1976d2",
   //     },
-  const [darkMode, setDarkMode] = useState(false);
-  //   },
-  // });
-  // const theme = useTheme();
 
-  const { window } = props;
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const drawerWidth = 240;
-
-  // Function to toggle between light and dark themes
-  const toggleTheme = () => {
-    setDarkMode((prevMode) => !prevMode);
-  };
   const navItems = [
     { id: 1, title: "Home", links: "/" },
     { id: 2, title: "About Me", links: "about-me" },
+    { id: 3, title: "Skills", links: "skills" },
+    { id: 4, title: "Projects", links: "projects" },
   ];
+
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
   const lightTheme = createTheme({
     palette: {
       mode: "light",
+      // primary: {
+      //   main: "",
+      // },
     },
   });
 
   const darkTheme = createTheme({
     palette: {
       mode: "dark",
+      primary: {
+        main: "#b60444",
+      },
     },
   });
-  const drawer = (
-    <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
-      <Typography variant="h6" sx={{ my: 2 }}>
-        MUI
-      </Typography>
-      <Divider />
-      <List>
-        {navItems.map((item) => (
-          // <ListItem key={item.id} disablePadding>
-          //   <ListItemButton sx={{ textAlign: "center" }}>
-          //     <ListItemText primary={item.title} />
-          //   </ListItemButton>
-          // </ListItem>
-          <ListItem key={item.id} disablePadding>
-            <Button
-              component={Link}
-              to={item.links}
-              sx={{ textAlign: "center", width: "100%" }}
-            >
-              <ListItemText primary={item.title} />
-            </Button>
-          </ListItem>
-        ))}
-      </List>
-    </Box>
-  );
+  const transitionDuration = 800;
 
-  const container =
-    window !== undefined ? () => window().document.body : undefined;
   const theme = darkMode ? darkTheme : lightTheme;
+  console.log(theme);
   return (
     <ThemeProvider theme={theme}>
       <Router>
-        <Box sx={{ display: "flex" }}>
+        <Box
+          sx={{
+            display: "flex",
+            transition: `background-color ${transitionDuration}ms ease`,
+            backgroundColor: theme.palette.background.default,
+            minHeight: "100vh",
+            bgcolor:theme.palette.background.default
+          }}
+        >
           <CssBaseline />
-          <AppBar component="nav" color="primary">
-            <Toolbar>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="start"
-                onClick={handleDrawerToggle}
-                sx={{ mr: 2, display: { sm: "none" } }}
-              >
-                <MenuIcon />
-              </IconButton>
-              <Typography
-                variant="h6"
-                component="div"
-                sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
-              >
-                Sheikh Fazal
-              </Typography>
-
-              <Box gap={2} sx={{ display: { xs: "none", sm: "flex" } }}>
-                <Button>Click</Button>
-                {navItems.map((item) => (
-                  <Box key={item.id} className="nav-links-box">
-                    <Button
-                      variant="text"
-                      sx={{ color: theme.palette.grey[100] }}
-                      component={Link}
-                      to={item.links}
-                    >
-                      {item.title}
-                    </Button>
-                    <Divider className="divider-for-nav-links" />
-                  </Box>
-                ))}
-              </Box>
-            </Toolbar>
-          </AppBar>
+          <NavBar handleDrawerToggle={handleDrawerToggle} navItems={navItems} />
           <nav>
-            <Drawer
-              container={container}
-              variant="temporary"
-              open={mobileOpen}
-              onClose={handleDrawerToggle}
-              ModalProps={{
-                keepMounted: true, // Better open performance on mobile.
-              }}
-              sx={{
-                display: { xs: "block", sm: "none" },
-                "& .MuiDrawer-paper": {
-                  boxSizing: "border-box",
-                  width: drawerWidth,
-                },
-              }}
-            >
-              {drawer}
-            </Drawer>
+            <CustomDrawer
+              handleDrawerToggle={handleDrawerToggle}
+              navItems={navItems}
+              mobileOpen={mobileOpen}
+            />
           </nav>
-          <Box component="main" p={2}>
+          <Box component="main" width="100%">
             <Toolbar />
-            <Button onClick={toggleTheme}>Click me</Button>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/about-me" element={<AboutMe />} />
-              <Route path="/skills" element={<Skills />} />
-            </Routes>
+            <Suspense fallback={<LinearProgress sx={{ height: 5 }} />}>
+              <Box>
+                <IconButton
+                  sx={{
+                    position: "fixed",
+                    right: 20,
+                    bottom: 20,
+                  }}
+                  onClick={() => setDarkMode(!darkMode)}
+                >
+                  <DarkModeIcon />
+                </IconButton>
+
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/about-me" element={<AboutMe />} />
+                  <Route path="/skills" element={<Skills />} />
+                </Routes>
+              </Box>
+            </Suspense>
           </Box>
         </Box>
       </Router>

@@ -3,8 +3,14 @@
 }
 .divider-for-nav-links {
   width: 0%;
+  height:2px;
   transition-duration: 0.5s;
+  background-color: #b60444;
 }
 .nav-links-box:hover .divider-for-nav-links {
   width: 100%;
 }
+
+
+
+
