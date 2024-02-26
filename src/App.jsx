@@ -49,10 +49,15 @@ function App() {
   const lightTheme = createTheme({
     palette: {
       mode: "light",
+      background: {
+        paper: "#fff",
+        default: "#f7f9b6",
+      },
       // primary: {
       //   main: "",
       // },
     },
+    // palette.background.default
   });
 
   const darkTheme = createTheme({
@@ -63,7 +68,7 @@ function App() {
       },
     },
   });
-  const transitionDuration = 800; 
+  const transitionDuration = 800;
 
   const theme = darkMode ? darkTheme : lightTheme;
   console.log(theme);
@@ -76,7 +81,7 @@ function App() {
             transition: `background-color ${transitionDuration}ms ease`,
             backgroundColor: theme.palette.background.default,
             minHeight: "100vh",
-            bgcolor:theme.palette.background.default
+            bgcolor: theme.palette.background.default,
           }}
         >
           <CssBaseline />
